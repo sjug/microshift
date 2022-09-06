@@ -192,8 +192,8 @@
         mode: '0755'
 
     - name: copy etcd systemd unit to node
-      ansible.builtin.copy:
-        src: etcd.service
+      ansible.builtin.template:
+        src: etcd.service.j2
         dest: /usr/lib/systemd/system/etcd.service
         owner: root
         group: root
@@ -287,12 +287,57 @@
     create: yes
   delegate_to: localhost
 
-- name: stress etcd with configmap loading
-  ansible.builtin.shell: |
-    for i in {5255..5355}; do
-      oc new-project project-$i
-      oc create configmap project-$i --from-file=/etc/pki/ca-trust/extracted/openssl/ca-bundle.trust.crt
-    done
+- name: create and delete steps
+  block:
+  - name: stress etcd with configmap loading
+    ansible.builtin.shell: |
+      for i in {5255..5755}; do
+        oc create namespace project-$i
+        oc label namespace project-$i purpose=test
+        oc create configmap ca-bundle -n project-$i --from-file=/etc/pki/ca-trust/extracted/openssl/ca-bundle.trust.crt
+      done
+
+  - name: Pause for 180 seconds for steady state post create
+    ansible.builtin.pause:
+      seconds: 180
+
+  - name: clean up created namespaces and configmaps
+    ansible.builtin.command: oc delete namespace -l purpose=test
+
+  - name: Pause for 180 seconds for steady state post delete
+    ansible.builtin.pause:
+      seconds: 180
+  when: create_delete_cm | default('false') | bool
+
+- name: create and apply steps
+  block:
+  - name: stress etcd with configmap loading
+    ansible.builtin.shell: |
+      for i in {5255..5755}; do
+        oc create namespace project-$i
+        oc label namespace project-$i purpose=test
+        oc create configmap ca-bundle -n project-$i --from-file=/etc/pki/ca-trust/extracted/openssl/ca-bundle.trust.crt --save-config
+      done
+
+  - name: Pause for 600 seconds for steady state post create
+    ansible.builtin.pause:
+      seconds: 600
+
+  - name: copy configmap yaml to node
+    ansible.builtin.copy:
+      src: "{{ configmap_filename }}"
+      dest: "{{ configmap_filename }}"
+      mode: '0644'
+
+  - name: apply the configmap
+    ansible.builtin.command: oc apply -n project-{{ item }} -f {{ configmap_filename }}
+    with_sequence: start=5255 end=5755
+
+  - name: delete configmap yaml
+    ansible.builtin.file:
+      path: "{{ configmap_filename }}"
+      state: absent
+  when: create_apply_cm | default('false') | bool
 
 #- name: copy kubeconfig to localhost
 #  ansible.builtin.fetch:
@@ -311,7 +356,7 @@
     delay: 15
   
   - name: source pbench-agent & move results
-    ansible.builtin.shell: source /etc/profile.d/pbench-agent.sh && pbench-move-results
+    ansible.builtin.shell: source /etc/profile.d/pbench-agent.sh && pbench-move-results --user=microshift
   when: install_pbench | bool
   environment:
     PBENCH_USER: sejug

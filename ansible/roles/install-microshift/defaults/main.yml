@@ -43,6 +43,7 @@ root_bin_dir: /usr/bin
 
 etcd_dir: "{{ ansible_env.HOME }}/etcd"
 etcd_repo: https://github.com/openshift/etcd.git
+etcd_snapshot_count: 500
 
 microshift_dir: "{{ ansible_env.HOME }}/microshift"
 microshift_repo: https://github.com/openshift/microshift.git
@@ -67,3 +68,5 @@ vg_name: rhel
 lvm_disk: /dev/xvdb
 
 sample_interval: 5
+
+configmap_filename: configmap.yml

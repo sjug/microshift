@@ -1,0 +1,10 @@
+---
+# Create a configmap template and then apply it
+
+- name: template a configmap
+  ansible.builtin.template:
+    src: "{{ configmap_filename }}.j2"
+    dest: "{{ configmap_filename }}"
+
+- name: apply the configmap
+  ansible.builtin.command: oc apply -f {{ configmap_filename }}

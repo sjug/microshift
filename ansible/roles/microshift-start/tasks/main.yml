@@ -80,7 +80,7 @@
       jid: "{{ pbench_user_benchmark_result.ansible_job_id }}"
     register: job_result
     until: job_result.finished
-    retries: 80
+    retries: 240
     delay: 15
   
   - name: source pbench-agent & move results
