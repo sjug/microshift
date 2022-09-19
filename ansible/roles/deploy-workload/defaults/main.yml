@@ -1,0 +1,5 @@
+---
+# deploy-workload default vars
+
+microshift_dir: "{{ ansible_env.HOME }}/microshift"
+microshift_repo: https://github.com/openshift/microshift.git

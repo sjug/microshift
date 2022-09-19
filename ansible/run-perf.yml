@@ -49,3 +49,9 @@
     - install-microshift
     #- microshift-start
 
+- name: workload roles
+  hosts: microshift
+  vars_files:
+    - vars/all.yml
+  roles:
+    - deploy-workload

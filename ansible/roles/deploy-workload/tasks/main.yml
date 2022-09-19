@@ -1,0 +1,18 @@
+---
+# deploy-workload tasks
+
+- name: check if microshift dir exists
+  ansible.builtin.stat:
+    path: "{{ microshift_dir }}"
+  register: ms_dir
+
+- name: clone microshift git repo
+  ansible.builtin.git:
+    repo: "{{ microshift_repo }}"
+    dest: "{{ microshift_dir }}"
+  when: not ms_dir.stat.exists
+
+- name: create reference workload in cluster
+  ansible.builtin.command: oc apply -k .
+  args:
+    chdir: "{{ microshift_dir }}/hack/reference-workload"
