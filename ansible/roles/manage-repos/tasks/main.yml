@@ -85,3 +85,13 @@
   ansible.builtin.set_fact:
     pbench_installed: false
   when: "'pbench-agent' not in ansible_facts.packages"
+
+- name: Install pip
+  yum:
+    name: python3-pip
+    state: present
+
+- name: Install 'kubernetes' Python library
+  pip:
+    name: kubernetes
+    state: present
