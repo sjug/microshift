@@ -19,3 +19,5 @@ pbench_configuration_environment: ec2
 pbench_key_url:
 pbench_config_url:
 pbench_record_duration: 360
+
+microshift_hostname: "{{ microshift_hostname_arg | default('microshift-dev') }}"
