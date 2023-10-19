@@ -85,4 +85,3 @@
   ansible.builtin.set_fact:
     pbench_installed: false
   when: "'pbench-agent' not in ansible_facts.packages"
-    
