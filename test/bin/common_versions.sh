@@ -97,8 +97,8 @@ export CURRENT_RELEASE_VERSION
 # For a release branch, the previous release repository should come from the
 # official 'rhocp' stream.# The previous release repository value should either
 # point to the OpenShift mirror URL or the 'rhocp' repository name.
-PREVIOUS_RELEASE_REPO="https://mirror.openshift.com/pub/openshift-v4/${UNAME_M}/microshift/ocp/latest-4.21/el9/os"
-PREVIOUS_RELEASE_VERSION="$(get_vrel_from_beta "${PREVIOUS_RELEASE_REPO}")"
+PREVIOUS_RELEASE_REPO="rhocp-4.21-for-rhel-9-${UNAME_M}-rpms"
+PREVIOUS_RELEASE_VERSION="$(get_vrel_from_rhsm "${PREVIOUS_RELEASE_REPO}")"
 export PREVIOUS_RELEASE_REPO
 export PREVIOUS_RELEASE_VERSION
 
@@ -122,7 +122,7 @@ export RHOCP_MINOR_Y_BETA
 
 # The 'rhocp_minor_y' variable should be the previous minor version number, if
 # the previous release is available through the 'rhocp' stream, otherwise empty.
-RHOCP_MINOR_Y1=""
+RHOCP_MINOR_Y1=21
 # The beta repository, containing dependencies, should point to the
 # OpenShift mirror URL. The mirror for previous release should always
 # be available.
@@ -155,11 +155,17 @@ export BREW_RC_RELEASE_VERSION
 export BREW_EC_RELEASE_VERSION
 export BREW_NIGHTLY_RELEASE_VERSION
 
-# Set the release type to ec, rc or zstream
-LATEST_RELEASE_TYPE="ec"
-export LATEST_RELEASE_TYPE
+# Set the release type based on priority: zstream > RC > EC > nightly
+if [ -n "${BREW_Y0_RELEASE_VERSION}" ]; then
+    BREW_LREL_RELEASE_VERSION="${BREW_Y0_RELEASE_VERSION}"
+elif [ -n "${BREW_RC_RELEASE_VERSION}" ]; then
+    BREW_LREL_RELEASE_VERSION="${BREW_RC_RELEASE_VERSION}"
+elif [ -n "${BREW_EC_RELEASE_VERSION}" ]; then
+    BREW_LREL_RELEASE_VERSION="${BREW_EC_RELEASE_VERSION}"
+else
+    BREW_LREL_RELEASE_VERSION="${BREW_NIGHTLY_RELEASE_VERSION}"
+fi
 
-BREW_LREL_RELEASE_VERSION="${BREW_EC_RELEASE_VERSION}"
 export BREW_LREL_RELEASE_VERSION
 
 # Branch and commit for the openshift-tests-private repository

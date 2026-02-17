@@ -187,11 +187,11 @@ get_vm_bridge_ip() {
 VM_BRIDGE_IP="$(get_vm_bridge_ip "default")"
 
 # Web server port number
-WEB_SERVER_PORT=8080
+export WEB_SERVER_PORT=8080
 
 # Web server URL using VM bridge IP with fallback to host name
 # shellcheck disable=SC2034  # used elsewhere
-WEB_SERVER_URL="http://${VM_BRIDGE_IP:-$(hostname)}:${WEB_SERVER_PORT}"
+export WEB_SERVER_URL="http://${VM_BRIDGE_IP:-$(hostname)}:${WEB_SERVER_PORT}"
 
 # Mirror registry port number
 export MIRROR_REGISTRY_PORT=5000
@@ -199,6 +199,10 @@ export MIRROR_REGISTRY_PORT=5000
 # Mirror registry URL using VM bridge IP with fallback to host name
 MIRROR_REGISTRY_URL="${VM_BRIDGE_IP:-$(hostname)}:${MIRROR_REGISTRY_PORT}/microshift"
 export MIRROR_REGISTRY_URL
+
+# File names containing credentials for the OpenShift mirror repositories
+export OCP_MIRROR_USERNAME_FILE="${OCP_MIRROR_USERNAME_FILE:-"${HOME}/.ocp_mirror_username"}"
+export OCP_MIRROR_PASSWORD_FILE="${OCP_MIRROR_PASSWORD_FILE:-"${HOME}/.ocp_mirror_password"}"
 
 get_build_branch() {
     local -r ocp_ver="$(grep ^OCP_VERSION "${ROOTDIR}/Makefile.version.$(uname -m).var"  | awk '{print $NF}' | awk -F. '{print $1"."$2}')"
