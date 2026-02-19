@@ -67,7 +67,8 @@ Reboot MicroShift Host
 
     # Verify that there was exactly one reboot
     ${cur_reboots}=    Get Last Reboots Count
-    Should Be Equal As Integers    ${cur_reboots}    ${reboots + 1}
+    ${exp_reboots}=    Evaluate    ${reboots} + 1
+    Should Be Equal As Integers    ${cur_reboots}    ${exp_reboots}
 
     RETURN    ${cur_bootid}
 

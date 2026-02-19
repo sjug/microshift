@@ -142,7 +142,8 @@ def get_last_reboots_count() -> int:
     """
     Get number of system reboots using 'last reboot' command
     """
-    stdout = remote_sudo("last reboot | grep -c '^reboot'")
+    # If no matches are found, the 'grep -c' command exits with non-zero code
+    stdout, _ = remote_sudo("last reboot | grep -c '^reboot' || true")
     return int(stdout)
 
 

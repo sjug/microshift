@@ -8,7 +8,7 @@ set -xeuo pipefail
 # When the deployment testing is done, boot_counter should be removed.
 if grub2-editenv - list | grep -q ^boot_counter=; then
     echo "Greenboot didn't decide the system is healthy after staging new deployment."
-    echo "Quiting to not interfere with the process"
+    echo "Quitting to not interfere with the process"
     exit 0
 fi
 
