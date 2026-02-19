@@ -18,8 +18,9 @@ Greenboot Health Check Exited
 
     Systemctl Check Service SubState    greenboot-healthcheck.service    exited
 
-Restart Greenboot And Wait For Success
-    [Documentation]    Verify the health of the deployments using the MicroShift healthcheck command
+Wait For MicroShift Healthcheck Success
+    [Documentation]    Verify the health of the deployments by running the
+    ...    MicroShift healthcheck command and waiting for it to succeed
     [Arguments]    ${wait_timeout}=600s
 
     # Note that the newer implementation of greenboot-healthcheck service no

@@ -258,4 +258,4 @@ Cleanup And Create NS
 Setup Suite And Wait For Greenboot
     [Documentation]    Run setup suit and wait for greenboot to become ready
     Setup Suite
-    Restart Greenboot And Wait For Success
+    Wait For MicroShift Healthcheck Success

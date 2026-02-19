@@ -26,7 +26,7 @@ ${HOSTNAME_BIN_PATH}            /usr/bin/hostname
 *** Test Cases ***
 Run with User Workload
     [Documentation]    Add a user workload, verify that it starts and greenboot is successful
-    Restart Greenboot And Wait For Success
+    Wait For MicroShift Healthcheck Success
     Add User Workload
     Cleanup And Start
 
@@ -36,7 +36,7 @@ Run with User Workload
 
 Simulate Service Failure
     [Documentation]    Simulate Service failure
-    Restart Greenboot And Wait For Success
+    Wait For MicroShift Healthcheck Success
     Disrupt Service
     Cleanup MicroShift    --all    --keep-images
     # Not using the 'Start MicroShift' keyword because it retries
@@ -44,7 +44,7 @@ Simulate Service Failure
     ...    Systemctl    start    microshift
     # Lower the default wait timeout to fail-fast tests
     Run Keyword And Expect Error    0 != 1
-    ...    Restart Greenboot And Wait For Success    ${WAIT_TIMEOUT}s
+    ...    Wait For MicroShift Healthcheck Success    ${WAIT_TIMEOUT}s
 
     [Teardown]    Run Keywords
     ...    Restore Service
@@ -52,12 +52,12 @@ Simulate Service Failure
 
 Simulate Pod Failure
     [Documentation]    Simulate pod network failure
-    Restart Greenboot And Wait For Success
+    Wait For MicroShift Healthcheck Success
     Disrupt Pod Network
     Restart MicroShift
     # Lower the default wait timeout to fail-fast tests
     Run Keyword And Expect Error    0 != 1
-    ...    Restart Greenboot And Wait For Success    ${WAIT_TIMEOUT}s
+    ...    Wait For MicroShift Healthcheck Success    ${WAIT_TIMEOUT}s
 
     [Teardown]    Run Keywords
     ...    Remove Drop In MicroShift Config    10-svcNetwork
