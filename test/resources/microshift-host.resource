@@ -132,7 +132,7 @@ Is System Rebooted
     ${cur_bootid}=    Get Current Boot Id
     ${len}=    Get Length    ${cur_bootid}
     IF    ${len} == 0
-        RETURN    False    ${old_bootid}
+        RETURN    ${FALSE}    ${old_bootid}
     ELSE
         ${system_rebooted}=    Evaluate    '${old_bootid}' != '${cur_bootid}'
         RETURN    ${system_rebooted}    ${cur_bootid}
