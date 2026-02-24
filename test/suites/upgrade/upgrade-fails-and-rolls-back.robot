@@ -29,6 +29,8 @@ New Deployment Is Consistently Unhealthy And Rolls Back
     Oc Create    configmap -n default unhealthy-upgrade-test
 
     TestAgent.Add Action For Next Deployment    every    ${REASON}
+
+    ${reboots}=    Get Last Reboots Count
     Deploy Commit Expecting A Rollback
     ...    ${FAILING_REF}
     ...    True
@@ -36,7 +38,12 @@ New Deployment Is Consistently Unhealthy And Rolls Back
 
     Wait For MicroShift Service
     Backup Should Exist    ${backup}
-    Expected Boot Count    5
+
+    # Expect 2 more reboots: one for the new deployment and one for the rollback
+    ${cur_reboots}=    Get Last Reboots Count
+    ${exp_reboots}=    Evaluate    ${reboots} + 2
+    Should Be Equal As Integers    ${cur_reboots}    ${exp_reboots}
+
     Oc Get    configmap    default    unhealthy-upgrade-test
 
 
