@@ -116,6 +116,10 @@ assets:
       ignore: "extracted automatically from 05_operand_rbac.yaml"
     - file: clusterrolebinding.yaml
       ignore: "extracted automatically from 05_operand_rbac.yaml"
+    - file: role.yaml
+      ignore: "extracted automatically from 05_operand_rbac.yaml"
+    - file: rolebinding.yaml
+      ignore: "extracted automatically from 05_operand_rbac.yaml"
 
   - dir: controllers/cluster-policy-controller/
     src: cluster-kube-controller-manager-operator/bindata/assets/kube-controller-manager/

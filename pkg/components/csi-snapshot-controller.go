@@ -33,6 +33,8 @@ func startCSISnapshotController(ctx context.Context, cfg *config.Config, kubecon
 	var (
 		cr     = []string{"components/csi-snapshot-controller/clusterrole.yaml"}
 		crb    = []string{"components/csi-snapshot-controller/clusterrolebinding.yaml"}
+		r      = []string{"components/csi-snapshot-controller/role.yaml"}
+		rb     = []string{"components/csi-snapshot-controller/rolebinding.yaml"}
 		sa     = []string{"components/csi-snapshot-controller/serviceaccount.yaml"}
 		deploy = []string{"components/csi-snapshot-controller/csi_controller_deployment.yaml"}
 	)
@@ -51,6 +53,12 @@ func startCSISnapshotController(ctx context.Context, cfg *config.Config, kubecon
 		}
 		if err := assets.ApplyClusterRoleBindings(ctx, crb, kubeconfigPath); err != nil {
 			return fmt.Errorf("apply clusterRoleBinding: %w", err)
+		}
+		if err := assets.ApplyRoles(ctx, r, kubeconfigPath); err != nil {
+			return fmt.Errorf("apply role: %w", err)
+		}
+		if err := assets.ApplyRoleBindings(ctx, rb, kubeconfigPath); err != nil {
+			return fmt.Errorf("apply roleBinding: %w", err)
 		}
 		if err := assets.ApplyServiceAccounts(ctx, sa, kubeconfigPath); err != nil {
 			return fmt.Errorf("apply service account: %w", err)
